@@ -1,6 +1,9 @@
 package cs3500.pa03.model;
 
+import cs3500.pa03.controller.ManualPlayerController;
+import cs3500.pa03.model.enumuation.GameResult;
 import cs3500.pa03.view.BattleShipView;
+import cs3500.pa03.view.BattleShipViewCommandLine;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -9,16 +12,16 @@ import java.util.Random;
  * represent a manual player, need a person to interact with
  */
 public class ManualPlayer extends AbstractPlayer {
-
-
+  private ManualPlayerController controller;
   /**
-   * @param view is the view for this program
+   * @param controller is the controller for this player
    * @param r is the random number to place ship.
    * @param remainShip is the remain ship this player have
    * @param board is the board this player can see
    */
-  public ManualPlayer(BattleShipView view, Random r, List<Ship> remainShip, Board board) {
-    super(view, r, remainShip, board);
+  public ManualPlayer(ManualPlayerController controller, Random r, List<Ship> remainShip, Board board) {
+    super(r, remainShip, board);
+    this.controller = controller;
   }
 
 
@@ -39,23 +42,14 @@ public class ManualPlayer extends AbstractPlayer {
   @Override
   public List<Coord> takeShots() {
     List<Coord> userShorts;
-    try {
-      userShorts = this.view.takeShot("Please enter "
-          + this.remainShip.size() + " shorts :\n", this.remainShip.size());
-      while (!this.validInput(userShorts)) {
-        userShorts = this.view.takeShot("the Coordinates is "
-                + "not valid, Please enter again :\n",
-            this.remainShip.size());
-      }
-    } catch (IOException e) {
-      this.view.presentPrompt("Meet unhandled situation : " + e.getMessage());
-      return this.takeShots();
+    userShorts = this.controller.handlePlayerTakeShort(this.remainShip.size(), true);
+    while (!this.validInput(userShorts)) {
+        userShorts = this.controller.handlePlayerTakeShort(this.remainShip.size(), false);
     }
     for (Coord c : userShorts) {
       Coord onboard = c.findCoord(this.board.getOpponentBoard());
       onboard.handleHit();
     }
-
     return userShorts;
   }
 
@@ -86,6 +80,23 @@ public class ManualPlayer extends AbstractPlayer {
   public void successfulHits(List<Coord> shotsThatHitOpponentShips) {
     for (Coord c : shotsThatHitOpponentShips) {
       c.findAndHit(board.getOpponentBoard());
+    }
+  }
+
+
+  /**
+   * return the information to view
+   *
+   * @param result if the player has won, lost, or forced a draw
+   * @param reason the reason for the game ending
+   */
+  @Override
+  public void endGame(GameResult result, String reason) {
+    switch (result) {
+      case WIN -> this.controller.presentPrompt("You win\n" + reason);
+      case LOSE -> this.controller.presentPrompt("You lose\n" + reason);
+      case DRAW -> this.controller.presentPrompt("Game tile\n" + reason);
+      default -> { }
     }
   }
 

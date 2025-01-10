@@ -9,6 +9,7 @@ import cs3500.pa03.model.Ship;
 import cs3500.pa03.model.enumuation.GameResult;
 import cs3500.pa03.model.enumuation.ShipType;
 import cs3500.pa03.view.BattleShipView;
+import cs3500.pa03.view.BattleShipViewCommandLine;
 import cs3500.pa04.BattleShipController;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -37,9 +38,9 @@ public class ManualBattleShipController implements BattleShipController {
   public ManualBattleShipController(BattleShipView view, Random random) throws IOException {
     this.view = view;
     this.mainBoard = new Board();
-    this.mainPlayer = new ManualPlayer(this.view, random,
+    this.mainPlayer = new ManualPlayer(new ManualPlayerController(view), random,
         this.mainShips, this.mainBoard);
-    this.opponent = new AiPlayer("PLAYER2", this.view, random,
+    this.opponent = new AiPlayer("PLAYER2",  random,
         this.opponentShips, new Board());
     this.iniPlayers();
   }
@@ -55,7 +56,7 @@ public class ManualBattleShipController implements BattleShipController {
    */
   private void iniPlayers() throws IOException {
     int[] size = this.view.askSize("""
-        Hello! Welcome to the OOD BattleSalvo Game!\s
+        Hello! Welcome to the BattleSalvo Game!\s
         Please enter a valid height and width below:\s
         """);
     int height = size[0];

@@ -1,9 +1,14 @@
 package cs3500.pa04;
 
 import cs3500.pa03.controller.ManualBattleShipController;
+import cs3500.pa03.controller.ManualPlayerController;
 import cs3500.pa03.model.AiPlayer;
 import cs3500.pa03.model.Board;
 import cs3500.pa03.model.Player;
+import cs3500.pa03.view.BattleShipView;
+import cs3500.pa03.view.BattleShipViewCommandLine;
+import cs3500.pa03.view.BattleShipViewWeb;
+import javafx.application.Application;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
@@ -22,7 +27,8 @@ public class Driver {
    */
 
   public static void main(String[] args)  {
-    driver(args);
+   //  driver(args);
+    Application.launch(BattleShipViewWeb.class, args);
   }
 
   /**
@@ -37,13 +43,13 @@ public class Driver {
     try {
       Readable read = new InputStreamReader(System.in);
       Appendable write = new PrintStream(System.out);
-      cs3500.pa03.view.BattleShipView v = new cs3500.pa03.view.BattleShipView(read, write);
+      BattleShipView v = new BattleShipViewCommandLine(read, write);
       BattleShipController controller;
       if (args.length == 2) {
         String host = args[0];
         int post = Integer.parseInt(args[1]);
         Socket server = new Socket(host, post);
-        Player player = new AiPlayer("pa04-xinyi", v, new Random(),
+        Player player = new AiPlayer("pa04-xinyi" , new Random(),
             new ArrayList<>(), new Board());
         controller = new ProxyController(server, GameType.SINGLE, player);
       } else  {

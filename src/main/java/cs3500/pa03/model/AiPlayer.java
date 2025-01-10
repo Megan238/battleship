@@ -1,7 +1,10 @@
 package cs3500.pa03.model;
 
+import cs3500.pa03.controller.ManualPlayerController;
+import cs3500.pa03.model.enumuation.GameResult;
 import cs3500.pa03.model.enumuation.ShipType;
 import cs3500.pa03.view.BattleShipView;
+import cs3500.pa03.view.BattleShipViewCommandLine;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,14 +25,14 @@ public class AiPlayer extends AbstractPlayer {
    * Constructor for aiPlayer
    *
    * @param name is the name of player
-   * @param view is the view for this program
+   * @param controller is the controller for this player
    * @param r is the random number to place ship.
    * @param remainShip is the remain ship this player have
    * @param board is the board this player can see
    */
-  public AiPlayer(String name, BattleShipView view,
+  public AiPlayer(String name,
                   Random r, List<Ship> remainShip, Board board) {
-    super(view, r, remainShip, board);
+    super(r, remainShip, board);
     this.name = name;
     this.weightPossible = new LinkedList<>();
   }
@@ -122,4 +125,8 @@ public class AiPlayer extends AbstractPlayer {
     this.weightPossible.sort(Coord::compareWeight);
   }
 
+  @Override
+  public void endGame(GameResult result, String reason) {
+
+  }
 }

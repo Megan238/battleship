@@ -1,8 +1,10 @@
 package cs3500.pa03.model;
 
+import cs3500.pa03.controller.ManualPlayerController;
 import cs3500.pa03.model.enumuation.GameResult;
 import cs3500.pa03.model.enumuation.ShipType;
 import cs3500.pa03.view.BattleShipView;
+import cs3500.pa03.view.BattleShipViewCommandLine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,25 +17,21 @@ import java.util.Random;
  */
 public abstract class AbstractPlayer implements Player {
   protected final List<Ship> remainShip;
-  protected final BattleShipView view;
   protected final Random random;
   protected final Board board;
   protected List<ShipType> guessOpponentShip;
 
   /**
-   * @param view           is the view of this program
    * @param remainShip     is the remian ship this player had
    * @param random         is the random to place the ship
    * @param board          is the two boards for this player
    */
-  public AbstractPlayer(BattleShipView view, Random random, List<Ship> remainShip, Board board) {
-    this.view = view;
+  public AbstractPlayer( Random random, List<Ship> remainShip, Board board) {
     this.random = random;
     this.remainShip = remainShip;
     this.board = board;
     this.guessOpponentShip = new LinkedList<>();
   }
-
 
 
 
@@ -103,20 +101,20 @@ public abstract class AbstractPlayer implements Player {
   }
 
 
-
-  /**
-   * return the information to view
-   *
-   * @param result if the player has won, lost, or forced a draw
-   * @param reason the reason for the game ending
-   */
-  @Override
-  public void endGame(GameResult result, String reason) {
-    switch (result) {
-      case WIN -> this.view.presentPrompt("You win\n" + reason);
-      case LOSE -> this.view.presentPrompt("You lose\n" + reason);
-      case DRAW -> this.view.presentPrompt("Game tile\n" + reason);
-      default -> { }
-    }
-  }
+//
+//  /**
+//   * return the information to view
+//   *
+//   * @param result if the player has won, lost, or forced a draw
+//   * @param reason the reason for the game ending
+//   */
+//  @Override
+//  public void endGame(GameResult result, String reason) {
+//    switch (result) {
+//      case WIN -> this.controller.presentPrompt("You win\n" + reason);
+//      case LOSE -> this.controller.presentPrompt("You lose\n" + reason);
+//      case DRAW -> this.controller.presentPrompt("Game tile\n" + reason);
+//      default -> { }
+//    }
+//  }
 }
